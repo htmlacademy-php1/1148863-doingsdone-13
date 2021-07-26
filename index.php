@@ -9,37 +9,37 @@ $tasks = [
       'goal' => 'Собеседование в IT компании',
       'data' => '01.12.2019',
       'category' => 'Работа',
-      'ready' => 'false',
+      'ready' => false,
   ],
   [
       'goal' => 'Выполнить тестовое задание',
       'data' => '25.12.2019',
       'category' => 'Работа',
-      'ready' => 'false',
+      'ready' => false,
   ],
   [
       'goal' => 'Сделать задание первого раздела',
       'data' => '21.12.2019',
       'category' => 'Учеба',
-      'ready' => 'true',
+      'ready' => true,
   ],
   [
       'goal' => 'Встреча с другом',
       'data' => '22.12.2019',
       'category' => 'Входящие',
-      'ready' => 'false',
+      'ready' => false,
   ],
   [
       'goal' => 'Купить корм для кота',
-      'data' => 'null',
+      'data' => null,
       'category' => 'Домашние дела',
-      'ready' => 'false',
+      'ready' => false,
   ],
   [
       'goal' => 'Заказать пиццу',
-      'data' => 'null',
+      'data' => null,
       'category' => 'Домашние дела',
-      'ready' => 'false',
+      'ready' => false,
   ]
 
 ];
@@ -127,12 +127,12 @@ $tasks = [
 
 
                         <?php foreach ($tasks as $task) : ?>
-                            <?php if ($show_complete_tasks === 0 && $task['ready'] === 'true'): ?><?continue;?><?php endif; ?>
-                        <tr class="tasks__item task <?php if ($task['ready'] === 'true'): ?>task--completed<?php endif ?>" >
+                            <?php if ($show_complete_tasks === 0 && $task['ready'] === true): ?><?continue;?><?php endif; ?>
+                        <tr class="tasks__item task <?php if ($task['ready'] === true): ?>task--completed<?php endif ?>" >
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
-                                <?php if ($task['ready'] === 'true') : ?>checked<?php endif ?>>
+                                <?php if ($task['ready'] === true) : ?>checked<?php endif ?>>
 
                                 <span class="checkbox__text"><?=$task['goal'];?></span>
                             </label>
