@@ -43,6 +43,17 @@ $tasks = [
   ]
 
 ];
+
+function do_counting($name, $items) {
+    $number = 0;
+    foreach($items as $task) {
+        if($name == $task['category']) {
+            $number ++;
+        }
+    };
+    return $number;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -87,7 +98,9 @@ $tasks = [
                         <?php foreach ($projects as $project) : ?>
                             <li class="main-navigation__list-item">
                               <a class="main-navigation__list-item-link" href="#"><?=$project; ?></a>
-                              <span class="main-navigation__list-item-count">0</span>
+                              <span class="main-navigation__list-item-count">
+                               <?= do_counting($project, $tasks) ?>
+                              </span>
                             </li>
                         <?php endforeach; ?>
 
