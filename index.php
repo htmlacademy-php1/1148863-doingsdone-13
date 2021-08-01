@@ -4,12 +4,13 @@ require_once('helpers.php');
 require_once('data.php');
 
 
-$HOURS = 3600;
+
 
 
  function get_time($final_data) {
-     $now_date = date('d.m.Y');
-     $diff_time = strtotime($final_data) - strtotime($now_date);
+     $HOURS = 3600;
+     $now_date = time();
+     $diff_time = strtotime($final_data) - $now_date;
      $hours_until_end = floor($diff_time / $HOURS);
      return $hours_until_end;
  };
