@@ -4,86 +4,23 @@ require_once('helpers.php');
 require_once('data.php');
 require_once('functions.php');
 
-// Подключение к БД
+/** Подключение к БД */
 
 $connection = do_connection();
-mysqli_set_charset($connection, 'utf8');
 
-// Проверяем нет ли ошибки соединения
+/** Получаем данные о пользователе */
 
-if (!$connection) {
-    $error = mysqli_connect_error();
-    $content = find_mistake($error);
-    $layout_content = include_template('layout.php', [
-        'content' => $content,
-        'title' => 'Дела в порядке',
-        'user' => $user
-      ]);
+$user = find_users($connection);
 
-    print($layout_content);
-    exit;
-}
+/** Получаем список проектов пользователя */
 
-// Получаем данные о пользователе
+$projects = find_projects($connection);
 
-// Приводим id к числовому типу
-    $rand_user = 1;
-    $user_id = intval($rand_user);
+/** Получаем список задач пользователя */
 
-    $result = find_users($user_id);
+$tasks = find_tasks($connection);
 
-    if ($result) {
-        $user = mysqli_fetch_assoc($result);
-    }
-     else {
-        $error = mysqli_connect_error();
-        $content = find_mistake($error);
-        $layout_content = include_template('layout.php', [
-            'content' => $content,
-            'title' => 'Дела в порядке',
-            'user' => $user
-          ]);
-        print($layout_content);
-        exit;
-     }
-
-// Получаем список проектов пользователя
-
-$result_project = find_projects($user_id);
-
-if (!$result_project) {
-    $error = mysqli_error();
-    $content = find_mistake($error);
-    $layout_content = include_template('layout.php', [
-        'content' => $content,
-        'title' => 'Дела в порядке',
-        'user' => $user
-      ]);
-    print($layout_content);
-    exit;
-}
-
-$projects = mysqli_fetch_all($result_project, MYSQLI_ASSOC);
-
-//Получаем список задач пользователя
-
-$result_task = find_tasks($user_id);
-
-if (!$result_task) {
-    $error = mysqli_error();
-    $content = find_mistake($error);
-    $layout_content = include_template('layout.php', [
-        'content' => $content,
-        'title' => 'Дела в порядке',
-        'user' => $user
-      ]);
-    print($layout_content);
-    exit;
-}
-
-$tasks = mysqli_fetch_all($result_task, MYSQLI_ASSOC);
-
-// Подключаем страницы
+/**  Подключаем страницы */
 
 $page_content = include_template('main.php', [
     'tasks' => $tasks,
