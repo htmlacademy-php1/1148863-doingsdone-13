@@ -1,6 +1,8 @@
 <?php
 
-/** Дедлайн */
+/**
+ * Дедлайн
+ */
 
 function get_time($final_data):int {
     $HOURS = 3600;
@@ -10,7 +12,9 @@ function get_time($final_data):int {
     return $hours_until_end;
 };
 
-/** Подсчет проектов */
+/**
+ * Подсчет проектов
+ */
 
 function do_counting(string $name, array $items):int {
    $number = 0;
@@ -22,21 +26,27 @@ function do_counting(string $name, array $items):int {
    return $number;
 };
 
-/** Фильтрация */
+/**
+ * Фильтрация
+ */
 
 function esc($str) {
    $text = htmlspecialchars($str);
    return $text;
 };
 
-/** Проверяем наличие ошибки соединения */
+/**
+ * Рендерит контент для страницы с ошибкой
+ */
 
 function find_mistake(string $error):string {
     $content = include_template('error.php',['error' => $error]);
     return $content;
 };
 
-/** Текст ошибки */
+/**
+ * Выводит страницу с ошибкой и завершает работу
+ */
 
 function data_mistake_text(string $error) {
     $content = find_mistake($error);
@@ -50,7 +60,9 @@ function data_mistake_text(string $error) {
 };
 
 
-/** Подключение к БД */
+/**
+ * Подключение к БД
+ */
 
 function do_connection():object {
     $connection = mysqli_connect('localhost', 'root', '', 'doings');
@@ -62,46 +74,43 @@ function do_connection():object {
     return $connection;
 };
 
-/** Получаем список пользователей */
+/**
+ * Получает данные о пользователе
+ */
 
-function find_users(object $connection):array {
- /** Приводим id к числовому типу */
-    $rand_user = 1;
-    $user_id = intval($rand_user);
+function find_users(object $connection, int $user_id):array {
     $users = 'SELECT id, user_name FROM users WHERE id = ' . $user_id;
     $result = mysqli_query($connection, $users);
     if (!$result) {
         $error = mysqli_error();
         data_mistake_text($error);
     }
-     else {
-        $user = mysqli_fetch_assoc($result);
-     }
+
+     $user = mysqli_fetch_assoc($result);
      return $user;
 };
 
-/** Получаем список проектов */
+/**
+ * Получаем список проектов
+ */
 
-function find_projects(object $connection):array {
-    $rand_user = 1;
-    $user_id = intval($rand_user);
+function find_projects(object $connection, int $user_id):array {
     $projects = 'SELECT id, category FROM projects WHERE user_id = ' . $user_id;
     $result_project = mysqli_query($connection, $projects);
     if (!$result_project) {
         $error = mysqli_error();
         data_mistake_text($error);
     }
-     else {
-        $projects = mysqli_fetch_all($result_project, MYSQLI_ASSOC);
-     }
+
+     $projects = mysqli_fetch_all($result_project, MYSQLI_ASSOC);
      return $projects;
 };
 
-/** Получаем список задач */
+/**
+ * Получаем список задач
+ */
 
-function find_tasks(object $connection):array {
-    $rand_user = 1;
-    $user_id = intval($rand_user);
+function find_tasks(object $connection, int $user_id):array {
     $tasks = 'SELECT tasks.id, tasks.user_id, projects.category AS project,  tasks.task, tasks.final_date, tasks.ready_or_not FROM tasks '
     . 'LEFT JOIN projects ON tasks.project_id = projects.id '
     . 'LEFT JOIN users ON tasks.user_id = users.id '
@@ -111,9 +120,8 @@ function find_tasks(object $connection):array {
         $error = mysqli_error();
         data_mistake_text($error);
     }
-     else {
-        $tasks = mysqli_fetch_all($result_task, MYSQLI_ASSOC);
-     }
+
+     $tasks = mysqli_fetch_all($result_task, MYSQLI_ASSOC);
      return $tasks;
 };
 

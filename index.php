@@ -4,23 +4,40 @@ require_once('helpers.php');
 require_once('data.php');
 require_once('functions.php');
 
-/** Подключение к БД */
+/**
+ * Подключение к БД
+ */
 
 $connection = do_connection();
 
-/** Получаем данные о пользователе */
+/**
+ * Приводим id к числовому типу
+ */
 
-$user = find_users($connection);
+$rand_user = 1;
+$user_id = intval($rand_user);
 
-/** Получаем список проектов пользователя */
+/**
+ * Получаем данные о пользователе
+ */
 
-$projects = find_projects($connection);
+$user = find_users($connection, $user_id);
 
-/** Получаем список задач пользователя */
+/**
+ * Получаем список проектов пользователя
+ */
 
-$tasks = find_tasks($connection);
+$projects = find_projects($connection, $user_id);
 
-/**  Подключаем страницы */
+/**
+ * Получаем список задач пользователя
+ */
+
+$tasks = find_tasks($connection, $user_id);
+
+/**
+ * Подключаем страницы
+ */
 
 $page_content = include_template('main.php', [
     'tasks' => $tasks,
