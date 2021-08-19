@@ -2,33 +2,42 @@
 date_default_timezone_set("Europe/Moscow");
 require_once('helpers.php');
 require_once('data.php');
+require_once('functions.php');
 
+/**
+ * Подключение к БД
+ */
 
+$connection = do_connection();
 
+/**
+ * Приводим id к числовому типу
+ */
 
+$rand_user = 1;
+$user_id = intval($rand_user);
 
- function get_time($final_data) {
-     $HOURS = 3600;
-     $now_date = time();
-     $diff_time = strtotime($final_data) - $now_date;
-     $hours_until_end = floor($diff_time / $HOURS);
-     return $hours_until_end;
- };
+/**
+ * Получаем данные о пользователе
+ */
 
-function do_counting($name, $items) {
-    $number = 0;
-    foreach($items as $task) {
-        if($name == $task['category']) {
-            $number ++;
-        }
-    };
-    return $number;
-}
+$user = find_users($connection, $user_id);
 
-function esc($str) {
-	$text = htmlspecialchars($str);
-	return $text;
-}
+/**
+ * Получаем список проектов пользователя
+ */
+
+$projects = find_projects($connection, $user_id);
+
+/**
+ * Получаем список задач пользователя
+ */
+
+$tasks = find_tasks($connection, $user_id);
+
+/**
+ * Подключаем страницы
+ */
 
 $page_content = include_template('main.php', [
     'tasks' => $tasks,
@@ -37,7 +46,7 @@ $page_content = include_template('main.php', [
 $layout_content = include_template('layout.php', [
   'content' => $page_content,
   'title' => 'Дела в порядке',
-   'user' => 'Константин'
+   'user' => $user['user_name']
 ]);
 
 

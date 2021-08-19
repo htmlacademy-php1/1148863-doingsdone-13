@@ -5,16 +5,15 @@
                     <ul class="main-navigation__list">
                         <?php foreach ($projects as $project) : ?>
                             <li class="main-navigation__list-item">
-                              <a class="main-navigation__list-item-link" href="#"><?=esc($project); ?></a>
+                              <a class="main-navigation__list-item-link" href="#"><?=esc($project['category']); ?></a>
                               <span class="main-navigation__list-item-count">
-                               <?=do_counting($project, $tasks) ?>
+                               <?=do_counting($project['category'], $tasks) ?>
                               </span>
                             </li>
                         <?php endforeach; ?>
 
                     </ul>
                 </nav>
-
                 <a class="button button--transparent button--plus content__side-button"
                    href="pages/form-project.html" target="project_add">Добавить проект</a>
             </section>
@@ -56,12 +55,12 @@
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
                                 <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1"
-                                <?php if ($task['ready'] === true) : ?>checked<?php endif ?>>
+                                <?php if ($task['ready_or_not'] === true) : ?>checked<?php endif ?>>
 
-                                <span class="checkbox__text"><?=esc($task['goal']);?></span>
+                                <span class="checkbox__text"><?=esc($task['task']);?></span>
                             </label>
                         </td>
-                        <td class="task__date"><?=esc($task['data']);?></td>
+                        <td class="task__date"><?=esc($task['final_date']);?></td>
                     </tr>
 
                     <?php endforeach; ?>
