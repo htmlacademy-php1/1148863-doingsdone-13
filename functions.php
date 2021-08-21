@@ -106,12 +106,14 @@ function find_projects(object $connection, int $user_id):array {
      return $projects;
 };
 
+
+
 /**
- * Получаем список задач
+ * Получаем общий список задач
  */
 
 function find_tasks(object $connection, int $user_id):array {
-    $tasks = 'SELECT tasks.id, tasks.user_id, projects.category AS project,  tasks.task, tasks.final_date, tasks.ready_or_not FROM tasks '
+    $tasks = 'SELECT tasks.id, tasks.user_id, projects.category AS project, tasks.project_id, tasks.task, tasks.final_date, tasks.ready_or_not FROM tasks '
     . 'LEFT JOIN projects ON tasks.project_id = projects.id '
     . 'LEFT JOIN users ON tasks.user_id = users.id '
     . 'WHERE tasks.user_id = ' . $user_id;
@@ -123,6 +125,53 @@ function find_tasks(object $connection, int $user_id):array {
 
      $tasks = mysqli_fetch_all($result_task, MYSQLI_ASSOC);
      return $tasks;
+};
+
+
+
+/**
+ * Проверяем существование id проекта
+ * Выбираем задачи только для выбранного проекта
+ * Если в проекте задач нет, то получаем список задач по всем проектам
+ */
+
+function find_task_from_project(array $tasks, array $projects):array {
+    $result = [];
+    if (isset($_GET['id'])) {
+        $project_id = intval($_GET['id']);
+        $get_project = false;
+        foreach($projects as $project => $value){
+            if ($project_id === intval($value['id'])){
+                $get_project = true;
+                break;
+            }
+        }
+        if ($get_project === false){
+            http_response_code(404);
+            $error = 'Проект с данным ID не найден!';
+            $content = find_mistake($error);
+            $layout_content = include_template($path_to_template . "layout.php", [
+                "content" => $content,
+                "user" => $user,
+            ]);
+            print($layout_content);
+            exit;
+        }
+
+        foreach ($tasks as $task) {
+            if (intval($task['project_id']) === $project_id) {
+                $result[] = $task;
+            };
+        }
+        $count_result = count($result);
+            if ($count_result === 0) {
+                $result = $tasks;
+            }
+
+    } else {
+        $result = $tasks;
+    }
+    return $result;
 };
 
 ?>

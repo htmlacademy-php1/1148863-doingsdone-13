@@ -29,17 +29,21 @@ $user = find_users($connection, $user_id);
 
 $projects = find_projects($connection, $user_id);
 
+
 /**
  * Получаем список задач пользователя
  */
 
 $tasks = find_tasks($connection, $user_id);
 
+$tasks_from_project = find_task_from_project($tasks, $projects);
+
 /**
  * Подключаем страницы
  */
 
 $page_content = include_template('main.php', [
+    'tasks_from_project' => $tasks_from_project,
     'tasks' => $tasks,
     'projects' => $projects
 ]);
