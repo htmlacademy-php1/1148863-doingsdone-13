@@ -4,8 +4,12 @@
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
                         <?php foreach ($projects as $project) : ?>
-                            <li class="main-navigation__list-item">
-                              <a class="main-navigation__list-item-link" href="#"><?=esc($project['category']); ?></a>
+                            <li class="main-navigation__list-item
+                              <?php if (isset($project['id']) && intval($project['id']) === intval($_GET['id'])): ?>
+                              main-navigation__list-item--active
+                              <?php endif; ?>
+                            ">
+                              <a class="main-navigation__list-item-link" href="/index.php?id=<?= $project['id']; ?>"><?=esc($project['category']); ?></a>
                               <span class="main-navigation__list-item-count">
                                <?=do_counting($project['category'], $tasks) ?>
                               </span>
@@ -46,7 +50,7 @@
                 <table class="tasks">
 
 
-                        <?php foreach ($tasks as $task) : ?>
+                        <?php foreach ($tasks_from_project as $task) : ?>
                             <?php if ($show_complete_tasks === 0 && $task['ready'] === true): ?><?continue;?><?php endif; ?>
                         <tr class="tasks__item task <?php if ($task['ready'] === true): ?>task--completed<?php endif ?>
                             <?php if (get_time($task['data']) <= 24):?>task--important<?php endif; ?>
