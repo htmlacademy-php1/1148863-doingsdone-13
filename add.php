@@ -39,14 +39,46 @@ $tasks = find_tasks($connection, $user_id);
  */
 $tasks_from_project = array_reverse((find_task_from_project($tasks, $projects)), true);
 
+/* Получаем данные из формы добавления задачи
+ * Если форма валидна - добавляем новую задачу
+ * Если форма невалидна - выводим сообщение об ошибке
+ */
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $new_task = $_POST;
+    if (!empty($new_task)) {
+        $errors = is_form_valid($new_task, $projects);
+        if (empty($errors)) {
+            $file = $_FILES['preview'];
+            if (!empty($file['name'])) {
+                $dev = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $file_name = uniqid() . (!empty($dev) ? '.' : '') . $dev;
+                move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $file_name);
+            };
+            $result = add_new_task($connection, $user_id, $new_task, $file_name);
+            if ($result) {
+                unset($new_task);
+                header("Location: index.php");
+                exit;
+            }
+                $error_page[] = 'Ошибка! Задача не добавлена!';
+        };
+    };
+};
+
+
 /**
  * Подключаем страницы
  */
-$page_content = include_template('main.php', [
+$page_content = (empty($error_page)) ? include_template('form-task.php', [
     'tasks_from_project' => $tasks_from_project,
     'tasks' => $tasks,
-    'projects' => $projects
-]);
+    'task' => $new_task,
+    'projects' => $projects,
+    'errors' => $errors
+    ]) : include_template('error.php',[
+    'error_page' => $error_page
+    ]);
+
 $layout_content = include_template('layout.php', [
   'content' => $page_content,
   'title' => 'Дела в порядке',

@@ -53,7 +53,7 @@
                         <?php foreach ($tasks_from_project as $task) : ?>
                             <?php if ($show_complete_tasks === 0 && $task['ready'] === true): ?><?continue;?><?php endif; ?>
                         <tr class="tasks__item task <?php if ($task['ready'] === true): ?>task--completed<?php endif ?>
-                            <?php if (get_time($task['data']) <= 24):?>task--important<?php endif; ?>
+                            <?php if (get_time($task['final_date']) <= 24):?>task--important<?php endif; ?>
                             "
                             >
                         <td class="task__select">
