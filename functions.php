@@ -256,4 +256,63 @@ function is_param($name, $connection, $param) {
     };
 
 
+ /**
+  * Валидация формы регистрации нового пользователя
+  */
+     function is_register_valid($connection, $user_data) {
+         $errors = [];
+        if (!empty($user_data['email'])) {
+            $email = mysqli_real_escape_string($connection, $user_data['email']);
+            $sql = "SELECT id FROM users WHERE email = '$email'";
+            $result = mysqli_query($connection, $sql);
+            if(mysqli_num_rows($result) > 0) {
+                $errors['email'] = 'Пользователь с таким email уже существует!';
+        };
+
+        } else {
+            $errors['email'] = 'Введите email';
+        };
+
+        if (empty($user_data['password'])) {
+            $errors['password'] = 'Введите пароль';
+        };
+
+        if (empty($user_data['name'])) {
+            $errors['name'] = 'Введите имя';
+        };
+
+        return $errors;
+    };
+
+/**
+ * Добавляем в БД нового пользователя
+ */
+function add_new_user($connection, $user_data) {
+$result = [];
+    if ($connection) {
+        mysqli_set_charset($connection, "utf8");
+        // Email
+        $email = mysqli_real_escape_string($connection, $user_data['email']);
+        // Имя
+        $name = mysqli_real_escape_string($connection, $user_data['name']);
+        // Пароль
+        $password = password_hash($user_data['password'], PASSWORD_DEFAULT);
+        // Добавляем параметры в БД
+        $sql = "INSERT INTO users (
+                email,
+                user_name,
+                parole
+            ) VALUES('" .
+                $email . "', '" .
+                $name . "', '" .
+                $password . "'" . "
+            )";
+
+        $result = mysqli_query($connection, $sql);
+    } else {
+        $result = 'Произошла ошибка! ' . mysqli_error($connection);
+    };
+    return $result;
+};
+
 ?>

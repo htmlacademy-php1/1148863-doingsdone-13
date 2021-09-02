@@ -10,10 +10,20 @@ require_once('functions.php');
 $connection = do_connection();
 
 /**
+ * Проверяем наличие пользователя в базе
+ * Если пользователь незалогиненный - отправляем на страницу входа/регистрации
+ * Если находим пользователя - показываем его страницу
+ */
+if (!isset($_SESSION['email'])) {
+    header("Location: new-user.php");
+    exit;
+};
+
+/**
  * Приводим id к числовому типу
  */
-$rand_user = 1;
-$user_id = intval($rand_user);
+
+$user_id = 1;
 
 /**
  * Получаем данные о пользователе
@@ -47,6 +57,7 @@ $page_content = include_template('main.php', [
     'tasks' => $tasks,
     'projects' => $projects
 ]);
+
 $layout_content = include_template('layout.php', [
   'content' => $page_content,
   'title' => 'Дела в порядке',
