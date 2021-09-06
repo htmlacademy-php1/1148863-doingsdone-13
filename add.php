@@ -5,6 +5,11 @@ require_once('data.php');
 require_once('functions.php');
 
 /**
+ *  Начало сессии
+ */
+session_start();
+
+/**
  * Подключение к БД
  */
 $connection = do_connection();

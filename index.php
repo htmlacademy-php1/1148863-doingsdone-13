@@ -5,6 +5,12 @@ require_once('data.php');
 require_once('functions.php');
 
 /**
+ *  Начало сессии
+ */
+session_start();
+
+
+/**
  * Подключение к БД
  */
 $connection = do_connection();
@@ -14,7 +20,7 @@ $connection = do_connection();
  * Если пользователь незалогиненный - отправляем на страницу входа/регистрации
  * Если находим пользователя - показываем его страницу
  */
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['id'])) {
     header("Location: new-user.php");
     exit;
 };
@@ -23,7 +29,7 @@ if (!isset($_SESSION['email'])) {
  * Приводим id к числовому типу
  */
 
-$user_id = 1;
+$user_id = $_SESSION['id'];
 
 /**
  * Получаем данные о пользователе

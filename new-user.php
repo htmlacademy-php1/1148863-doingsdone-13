@@ -5,6 +5,11 @@ require_once('data.php');
 require_once('functions.php');
 
 /**
+ *  Начало сессии
+ */
+session_start();
+
+/**
  * Подключение к БД
  */
 $connection = do_connection();
@@ -20,12 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = is_register_valid($connection, $user_data);
         if (empty($errors)) {
             $result = add_new_user($connection, $user_data);
+            $email = mysqli_real_escape_string($connection, $user_data['email']);
+            $sql_id = "SELECT id FROM users WHERE email = '$email'";
+            $result_id = mysqli_query($connection, $sql_id);
+            $id = mysqli_fetch_assoc($result_id);
+            $_SESSION['id'] = $id['id'];
+
             if ($result) {
                 unset($user_data);
                 header("Location: index.php");
                 exit;
             } else {
-                $error_page[] = 'Ошибка! Пользователь не зарегистрирован!';
+                $error_page[] = 'Произошла ошибка регистрации';
             };
         };
     };

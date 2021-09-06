@@ -69,6 +69,11 @@ function do_connection():object {
 };
 
 /**
+ * Получаем ID зарегистрированного пользовалеля
+ */
+
+
+/**
  * Получает данные о пользователе
  */
 function find_users(object $connection, int $user_id):array {
@@ -296,7 +301,7 @@ $result = [];
         // Имя
         $name = mysqli_real_escape_string($connection, $user_data['name']);
         // Пароль
-        $password = password_hash($user_data['password'], PASSWORD_DEFAULT);
+        $password = mysqli_real_escape_string($connection, $user_data['password']);
         // Добавляем параметры в БД
         $sql = "INSERT INTO users (
                 email,
@@ -309,6 +314,7 @@ $result = [];
             )";
 
         $result = mysqli_query($connection, $sql);
+
     } else {
         $result = 'Произошла ошибка! ' . mysqli_error($connection);
     };

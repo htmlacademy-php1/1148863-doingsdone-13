@@ -19,7 +19,7 @@
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
             </a>
 
-            <?php if (isset($user['user_name'])): ?>
+            <?php if (isset($_SESSION['id'])): ?>
             <div class="main-header__side">
                 <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
 
@@ -48,7 +48,7 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-        <?php if (isset($user['user_name'])): ?>
+        <?php if (isset($_SESSION['id'])): ?>
         <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
         <?php endif; ?>
         <div class="main-footer__social social">
