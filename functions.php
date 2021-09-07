@@ -293,15 +293,13 @@ function is_param($name, $connection, $param) {
  * Добавляем в БД нового пользователя
  */
 function add_new_user($connection, $user_data) {
-$result = [];
-    if ($connection) {
         mysqli_set_charset($connection, "utf8");
         // Email
         $email = mysqli_real_escape_string($connection, $user_data['email']);
         // Имя
         $name = mysqli_real_escape_string($connection, $user_data['name']);
         // Пароль
-        $password = mysqli_real_escape_string($connection, $user_data['password']);
+        $password = password_hash($user_data['password'], PASSWORD_DEFAULT);
         // Добавляем параметры в БД
         $sql = "INSERT INTO users (
                 email,
@@ -313,10 +311,12 @@ $result = [];
                 $password . "'" . "
             )";
 
-        $result = mysqli_query($connection, $sql);
+        $new_user = mysqli_query($connection, $sql);
 
+    if ($new_user == false) {
+        $result = 'Произошла ошибка: ' . mysqli_error($connection);
     } else {
-        $result = 'Произошла ошибка! ' . mysqli_error($connection);
+        $result = $new_user;
     };
     return $result;
 };

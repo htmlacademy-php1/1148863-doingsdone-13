@@ -31,12 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = mysqli_fetch_assoc($result_id);
             $_SESSION['id'] = $id['id'];
 
-            if ($result) {
+            if ($result == true) {
                 unset($user_data);
                 header("Location: index.php");
                 exit;
             } else {
-                $error_page[] = 'Произошла ошибка регистрации';
+                $error_page[] = $result;
             };
         };
     };
