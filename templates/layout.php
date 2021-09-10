@@ -27,10 +27,14 @@
                     <div class="user-menu__data">
                         <p><?= $user; ?></p>
 
-                        <a href="#">Выйти</a>
+                        <a href="logout.php">Выйти</a>
                     </div>
                 </div>
             </div>
+            <?php else: ?>
+                <div class="main-header__side">
+          <a class="main-header__side-item button button--transparent" href="auth.php">Войти</a>
+        </div>
             <?php endif; ?>
 
         </header>

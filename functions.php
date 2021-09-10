@@ -321,4 +321,64 @@ function add_new_user($connection, $user_data) {
     return $result;
 };
 
+function get_data($connection, $sql) {
+    $result = [];
+    if ($connection) {
+        mysqli_set_charset($connection, "utf8");
+        $query = mysqli_query($connection, $sql);
+        $result = mysqli_fetch_all($query, MYSQLI_ASSOC);
+    } else {
+        $result = 'Ошибка БД: ' . mysqli_error($query);
+    };
+    return $result;
+
+};
+
+/**
+ * Валидация формы авторизации пользователя
+ */
+ function is_auth_valid($connection, $auth) {
+    $errors = [];
+// Проверяем, заполнено ли поле "пароль"
+    if (empty($auth['password'])) {
+        $errors['password'] = 'Введите пароль';
+    };
+// Если поле "email" заполнено, проверяем формат
+    if (!empty($auth['email'])) {
+        if (!filter_var($auth['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Неверный формат email';
+        };
+// Проверяем, заполнено ли поле "email"
+    } else {
+        $errors['email'] = 'Введите email';
+    };
+// Если форма заполнена правильно, проверяем, существует ли пользователь с таким email
+    if (empty($errors)) {
+        mysqli_set_charset($connection, "utf8");
+        $email = mysqli_real_escape_string($connection, $auth['email']);
+            $sql = "SELECT id, parole FROM users WHERE email = '$email'";
+            $result = mysqli_query($connection, $sql);
+            if(mysqli_num_rows($result) == 0) {
+                $errors['email'] = 'Пользователь с таким email не обнаружен';
+// Если пользователь с email обнаружен, сверяем хэш пароля с введенным
+        } else {
+            $res = get_data($connection, $sql);
+            if (!empty($res)) {
+                if (!password_verify($auth['password'], $res[0]['parole'])) {
+                    $errors['invalid'] = true;
+                };
+// Если пароли совпадают - получаем ID пользователя для дальнейшей работы
+                $result = $res[0]['id'];
+            };
+        }
+// Массив с ошибками
+        } else {
+            $result['errors'] = $errors;
+
+        };
+
+    return $result;
+};
+
+
 ?>

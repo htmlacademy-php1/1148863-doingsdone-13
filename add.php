@@ -17,7 +17,8 @@ $connection = do_connection();
 /**
  * Приводим id к числовому типу
  */
-$user_id = 1;
+$user_id = $_SESSION['id'];
+
 
 /**
  * Получаем данные о пользователе

@@ -9,7 +9,6 @@ require_once('functions.php');
  */
 session_start();
 
-
 /**
  * Подключение к БД
  */
@@ -21,9 +20,9 @@ $connection = do_connection();
  * Если находим пользователя - показываем его страницу
  */
 if (!isset($_SESSION['id'])) {
-    header("Location: new-user.php");
-    exit;
-};
+    $page_content = include_template('guest.php');
+
+} else {
 
 /**
  * Приводим id к числовому типу
@@ -63,6 +62,7 @@ $page_content = include_template('main.php', [
     'tasks' => $tasks,
     'projects' => $projects
 ]);
+};
 
 $layout_content = include_template('layout.php', [
   'content' => $page_content,
