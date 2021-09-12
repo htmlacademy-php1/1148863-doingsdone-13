@@ -321,17 +321,21 @@ function add_new_user($connection, $user_data) {
     return $result;
 };
 
+
+/**
+ * Получаем выборку данных из БД
+ * Если отсутствуес соединение, выдаем ошибку
+ */
 function get_data($connection, $sql) {
     $result = [];
-    if ($connection) {
+    if (!$connection) {
+        $result = 'Ошибка БД: ' . mysqli_error($query);
+        exit;
+    };
         mysqli_set_charset($connection, "utf8");
         $query = mysqli_query($connection, $sql);
         $result = mysqli_fetch_all($query, MYSQLI_ASSOC);
-    } else {
-        $result = 'Ошибка БД: ' . mysqli_error($query);
-    };
-    return $result;
-
+         return $result;
 };
 
 /**
@@ -354,10 +358,13 @@ function get_data($connection, $sql) {
     };
 // Если форма заполнена правильно, проверяем, существует ли пользователь с таким email
     if (empty($errors)) {
-        mysqli_set_charset($connection, "utf8");
         $email = mysqli_real_escape_string($connection, $auth['email']);
             $sql = "SELECT id, parole FROM users WHERE email = '$email'";
             $result = mysqli_query($connection, $sql);
+// Если запрос не получен - выдаем ошибку
+            if (!$result) {
+                $result = 'Произошла ошибка: ' . mysqli_error($connection);
+            };
             if(mysqli_num_rows($result) == 0) {
                 $errors['email'] = 'Пользователь с таким email не обнаружен';
 // Если пользователь с email обнаружен, сверяем хэш пароля с введенным

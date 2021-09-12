@@ -15,6 +15,17 @@ session_start();
 $connection = do_connection();
 
 /**
+ * Проверяем наличие пользователя в базе
+ * Если пользователь незалогиненный - отправляем на страницу входа/регистрации
+ * Если находим пользователя - показываем его страницу
+ */
+if (!isset($_SESSION['id'])) {
+    $page_content = include_template('guest.php');
+
+} else {
+
+
+/**
  * Приводим id к числовому типу
  */
 $user_id = $_SESSION['id'];
@@ -83,6 +94,7 @@ $page_content = (empty($error_page)) ? include_template('form-task.php', [
     ]) : include_template('error.php',[
     'error_page' => $error_page
     ]);
+};
 
 $layout_content = include_template('layout.php', [
   'content' => $page_content,
